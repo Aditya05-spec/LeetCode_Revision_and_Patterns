@@ -1,8 +1,4 @@
-#include <iostream>
-#include <vector>
-#include <unordered_map>
-#include <list>
-#include <queue>
+#include<bits/stdc++.h>
 using namespace std;
 template <typename T>
 
@@ -119,20 +115,91 @@ class Graph {
             dfsVisited[src] = false;
             return false;
         }
+
+        void topologicalSortDFS(int src , unordered_map<int , bool> &visited , stack<int> &ans) {  //Kahn's algorithm
+            visited[src] = true;
+            for(auto i : adjList[src]) {
+                if(!visited[i]) {
+                    topologicalSortDFS(i , visited , ans);
+                }
+            }
+            // While returning store the node in the stack
+            ans.push(src);
+        }
+
+        void topologicalSortBFS(int n , vector<int> &ans) {
+            queue<int> q;
+            unordered_map<int , int> inDegree;
+
+            // Indegree calculation
+            for(auto i : adjList) {
+                int src = i.first;
+                for(auto nbr : i.second) {
+                    inDegree[nbr]++;
+                }
+            }
+
+            // Put all node inside queue with indegree 0
+            for(int i=0 ; i<n ; i++) {
+                if(inDegree[i] == 0) {
+                    q.push(i);
+                }
+            }
+
+            while(!q.empty()) {
+                int frontNode = q.front();
+                q.pop();
+
+                ans.push_back(frontNode);
+                for(auto i : adjList[frontNode]) {
+                    inDegree[i]--;
+                    if(inDegree[i] == 0) {
+                        q.push(i);
+                    }
+                }
+            }
+        }
 };
 
 int main() {
 
-    int n=5;
+    int n=8;
     Graph<int> g2;
-    g2.addEdge(0,1,1);
-    g2.addEdge(1,2,1);
-    g2.addEdge(2,3,1);
-    g2.addEdge(3,4,1);
-    g2.addEdge(4,0,1);
+    g2.addEdge(2,4,1);
+    g2.addEdge(2,5,1);
+    g2.addEdge(4,6,1);
+    g2.addEdge(5,3,1);
+    g2.addEdge(3,7,1);
+    g2.addEdge(6,7,1);
+    g2.addEdge(7,0,1);
+    g2.addEdge(7,1,1);
 
     g2.printAdjList();
     cout << endl;
+
+    vector<int> ans;
+    g2.topologicalSortBFS(n , ans);
+
+    cout << "Printing Topological sort using BFS: " << endl;
+    for(auto i : ans) {
+        cout << i << " ";
+    }
+    cout << endl;
+
+
+    // unordered_map<int , bool> visited;
+    // stack<int> ans;
+    // for(int i=0 ; i<n ; i++) {
+    //     if(!visited[i]) {
+    //         g2.topologicalSortDFS(i , visited , ans);
+    //     }
+    // }
+
+    // cout << "Topological Sort using DFS: " << endl;
+    // while(!ans.empty()) {
+    //     cout << ans.top() << " ";
+    //     ans.pop();
+    // }
 
     // int ans = false;
     // unordered_map<int , bool> visited;
@@ -171,22 +238,22 @@ int main() {
 
 
 
-    bool ans = false;
-    unordered_map<int , bool> visited;
-    unordered_map<int , bool> dfsVisited;
-    for(int i=0 ; i<n ; i++) {
-        ans = g2.checkCyclicDirectedGraphUsingDFS(i , visited , dfsVisited);
-        if(ans) {
-            break;
-        }
-    }
+    // bool ans = false;
+    // unordered_map<int , bool> visited;
+    // unordered_map<int , bool> dfsVisited;
+    // for(int i=0 ; i<n ; i++) {
+    //     ans = g2.checkCyclicDirectedGraphUsingDFS(i , visited , dfsVisited);
+    //     if(ans) {
+    //         break;
+    //     }
+    // }
 
-    if(ans) {
-        cout << "Cycle is present" << endl;
-    }
-    else {
-        cout << "Cycle is not present" << endl;
-    }
+    // if(ans) {
+    //     cout << "Cycle is present" << endl;
+    // }
+    // else {
+    //     cout << "Cycle is not present" << endl;
+    // }
 
 
 

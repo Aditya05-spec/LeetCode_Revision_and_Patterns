@@ -105,21 +105,57 @@ class Graph {
         }
     }
 
+    void shortestDistDijkstra(int src , int n) {
+        vector<int> dist(n , INT_MAX);
+        set<pair<int , int > > st;
+
+        dist[src] = 0;
+        st.insert(make_pair(0,src));
+
+        while(!st.empty()) {
+            auto topElement = *(st.begin());
+            int nodeDistance = topElement.first;
+            int node = topElement.second;
+            st.erase(st.begin());
+
+            for(auto i : adjList[node]) {
+                if(nodeDistance + i.second < dist[i.first]) {
+                    // We need to update the distance
+                    // Finding entry in the set
+                    if(st.find(make_pair(dist[i.first] , i.first)) != st.end()) {
+                        // If wew found remove that entry
+                        st.erase(make_pair(dist[i.first] , i.first));
+                    }
+                    // Update both in the distance array and set
+                    dist[i.first] = nodeDistance + i.second ;
+                    st.insert(make_pair(nodeDistance + i.second , i.first));
+                }
+            }
+        }
+
+        for(auto i : dist) {
+            cout << i << " ";
+        }
+        cout << endl;
+    }
+
 };
 
 
 
 int main() {
     Graph g;
-    g.addEdges(0,1,5,1);
-    g.addEdges(0,2,3,1);
-    g.addEdges(2,1,2,1);
+    g.addEdges(6,3,2,0);
+    g.addEdges(6,1,14,0);
+    g.addEdges(3,1,9,0);
 
-    g.addEdges(1,3,3,1);
-    g.addEdges(2,3,5,1);
-    g.addEdges(2,4,6,1); 
+    g.addEdges(3,2,10,0);
+    g.addEdges(1,2,7,0);
+    g.addEdges(2,4,15,0); 
 
-    g.addEdges(4,3,1,0);
+    g.addEdges(4,3,11,0);
+    g.addEdges(6,5,9,0);
+    g.addEdges(4,5,6,0);
 
     g.printList();
 
@@ -128,10 +164,13 @@ int main() {
     // g.shortestPathBFS(src , dest);
 
 
-    stack<int> topoOrder;
-    unordered_map<int , bool> visited;
-    g.topologicalSortDFS(0 , visited , topoOrder);
-    g.shortestPathDFS(3 , topoOrder , 5);
+    // stack<int> topoOrder;
+    // unordered_map<int , bool> visited;
+    // g.topologicalSortDFS(0 , visited , topoOrder);
+    // g.shortestPathDFS(3 , topoOrder , 5);
+
+
+    g.shortestDistDijkstra(6 , 7);
 
     return 0;
 }

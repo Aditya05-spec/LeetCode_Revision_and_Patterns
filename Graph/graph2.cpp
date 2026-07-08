@@ -32,7 +32,7 @@ class Graph {
             }
             // While returning store the node in the stack
             ans.push(src);
-        }
+    }
 
     // Shortest Path using BFS
     void shortestPathBFS(int src , int dest) {

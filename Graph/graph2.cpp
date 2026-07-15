@@ -4,6 +4,7 @@ using namespace std;
 class Graph {
     public:
     unordered_map<int , list<pair<int , int> > > adjList;
+    // Inserting edges in the graph
     void addEdges(int u , int v , int wt , int direction) {
         adjList[u].push_back({v,wt});
         // Undirected Graph

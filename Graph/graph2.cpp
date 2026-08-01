@@ -96,9 +96,6 @@ class Graph {
                     }
                 }
             }
-            else {
-
-            }
         }
         
         // Printing the distance array

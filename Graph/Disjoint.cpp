@@ -3,10 +3,11 @@ using namespace std;
 
 class Disjoint {
     private:
-        vector<int> rank , parent;
+        vector<int> rank , parent , size;
     public:
         Disjoint(int n) {
             rank.resize(n+1 , 0);
+            size.resize(n+1 , 1);
             parent.resize(n+1);
             for(int i=0 ; i<=n ; i++) {
                 parent[i] = i;
@@ -34,6 +35,20 @@ class Disjoint {
             else {
                 rank[ulp_u]++;
                 parent[ulp_v] = ulp_u;
+            }
+        }
+
+        void unionBySize(int u , int v) {
+            int ulp_u = findParent(u);
+            int ulp_v = findParent(v);
+            if(ulp_u == ulp_v) return;
+            if(size[ulp_u] < size[ulp_v]) {
+                parent[ulp_u] = ulp_v;
+                size[ulp_v] += size[ulp_u];
+            }
+            else {
+                parent[ulp_v] = ulp_u;
+                size[ulp_u] += size[ulp_v];
             }
         }
 
